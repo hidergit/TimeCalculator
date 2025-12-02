@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Time Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .main-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .description {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 30px;
+            padding: 16px;
+            background: #f8fafc;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+        }
+
+        #time-pairs {
+            margin-bottom: 30px;
+        }
+
+        .time-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 24px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .time-row:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .time-inputs-wrapper {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .time-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .time-input-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .time-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="number"],
+        select {
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        input[type="number"] {
+            width: 65px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        select {
+            width: 75px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .colon {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        .remove-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .remove-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+        }
+
+        .remove-btn:active {
+            transform: translateY(0);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        #add-pair {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 32px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        #add-pair:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        #calculate {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 14px 40px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        #calculate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        #total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 30px;
+            padding: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+            animation: pulse 0.5s ease-out;
+        }
+
+        /* Stopwatch Styles */
+        .stopwatch-container {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 3px solid #0ea5e9;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2);
+        }
+
+        .stopwatch-header h2 {
+            color: #0369a1;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stopwatch-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .timer-preset {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .timer-preset label {
+            font-weight: 600;
+            color: #0369a1;
+        }
+
+        .preset-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preset-input input {
+            width: 80px;
+        }
+
+        .preset-input span {
+            font-weight: 500;
+            color: #64748b;
+        }
+
+        .stopwatch-display {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .stopwatch-display.active {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
+            border: 2px solid #10b981;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .time-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .clock-in-time {
+            font-size: 0.95rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .elapsed-time {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0369a1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 2px;
+        }
+
+        .target-time {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .stopwatch-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 14px 40px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+            padding: 14px 40px;
+            font-size: 1rem;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .stop-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            padding: 14px 32px;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .section-divider {
+            text-align: center;
+            margin: 30px 0 20px 0;
+            position: relative;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+        }
+
+        .section-divider::before {
+            left: 0;
+        }
+
+        .section-divider::after {
+            right: 0;
+        }
+
+        .section-divider span {
+            background: white;
+            padding: 0 20px;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 24px;
+            }
+
+            .time-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 16px;
+            }
+
+            .time-inputs-wrapper {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-wrapper">
+        <header>
+            <h1>⏱️ Time Calculator</h1>
+            <p class="subtitle">Track Your Work Hours with Precision</p>
+        </header>
+
+        <div class="container">
+            <div class="description">
+                <strong>📌 How to use:</strong> Use the stopwatch to automatically track time, or manually add time
+                pairs below. Enter hours (1-12) and minutes (0-59), then select AM/PM. Click "Calculate" to get your
+                total working hours.
+            </div>
+
+            <!-- Stopwatch Section -->
+            <div id="stopwatch-section" class="stopwatch-container">
+                <div class="stopwatch-header">
+                    <h2>⏱️ Active Session Tracker</h2>
+                </div>
+
+                <div class="stopwatch-controls">
+                    <div class="timer-preset">
+                        <label for="target-hours">🎯 Target Duration:</label>
+                        <div class="preset-input">
+                            <input type="number" id="target-hours" min="0" max="24" value="8" step="0.5">
+                            <span>hours</span>
+                        </div>
+                    </div>
+
+                    <div class="stopwatch-display" id="stopwatch-display">
+                        <div class="time-info">
+                            <div class="clock-in-time" id="clock-in-display">Clock In: --:-- --</div>
+                            <div class="elapsed-time" id="elapsed-time">00:00:00</div>
+                            <div class="target-time" id="target-display">Target: 8.0 hours</div>
+                        </div>
+                    </div>
+
+                    <div class="stopwatch-buttons">
+                        <button id="start-stop-btn" class="start-btn">▶️ Start Session</button>
+                        <button id="reset-btn" class="reset-btn" style="display:none;">🔄 Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-divider">
+                <span>Manual Time Entries</span>
+            </div>
+
+            <div id="time-pairs">
+                <!-- Dynamic rows will be added here -->
+            </div>
+
+            <div class="action-buttons">
+                <button id="add-pair">➕ Add Time Pair</button>
+                <button id="calculate">🧮 Calculate Total</button>
+            </div>
+
+            <div id="total"></div>
+        </div>
+
+        <footer>
+            <p>Built with ❤️ for efficient time tracking</p>
+        </footer>
+    </div>
+
+    <script>
+        let pairCounter = 0;
+
+        // Stopwatch state
+        let stopwatchInterval = null;
+        let stopwatchStartTime = null;
+        let stopwatchElapsed = 0;
+        let isRunning = false;
+
+        // Format time for display (12-hour format)
+        function formatTime12Hour(date) {
+            let hours = date.getHours();
+            let minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            return `${hours}:${minutes} ${ampm}`;
+        }
+
+        // Format elapsed time (HH:MM:SS)
+        function formatElapsedTime(seconds) {
+            const hrs = Math.floor(seconds / 3600);
+            const mins = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // Update stopwatch display
+        function updateStopwatchDisplay() {
+            if (isRunning) {
+                const now = Date.now();
+                stopwatchElapsed = Math.floor((now - stopwatchStartTime) / 1000);
+            }
+            document.getElementById('elapsed-time').textContent = formatElapsedTime(stopwatchElapsed);
+
+            // Update target display
+            const targetHours = parseFloat(document.getElementById('target-hours').value) || 0;
+            const elapsedHours = (stopwatchElapsed / 3600).toFixed(2);
+            const targetDisplay = document.getElementById('target-display');
+            targetDisplay.textContent = `Target: ${targetHours.toFixed(1)} hours | Elapsed: ${elapsedHours} hours`;
+
+            // Change color if target reached
+            if (stopwatchElapsed / 3600 >= targetHours && targetHours > 0) {
+                targetDisplay.style.color = '#10b981';
+                targetDisplay.style.fontWeight = '700';
+            } else {
+                targetDisplay.style.color = '#64748b';
+                targetDisplay.style.fontWeight = '500';
+            }
+        }
+
+        // Start/Stop stopwatch
+        function toggleStopwatch() {
+            const btn = document.getElementById('start-stop-btn');
+            const display = document.getElementById('stopwatch-display');
+            const resetBtn = document.getElementById('reset-btn');
+
+            if (!isRunning) {
+                // Start stopwatch
+                stopwatchStartTime = Date.now() - (stopwatchElapsed * 1000);
+                isRunning = true;
+
+                // Update UI
+                btn.textContent = '⏸️ Stop Session';
+                btn.className = 'stop-btn';
+                display.classList.add('active');
+                resetBtn.style.display = 'none';
+
+                // Show clock-in time
+                const clockInTime = new Date(stopwatchStartTime);
+                document.getElementById('clock-in-display').textContent = `Clock In: ${formatTime12Hour(clockInTime)}`;
+
+                // Start interval
+                stopwatchInterval = setInterval(updateStopwatchDisplay, 100);
+
+                saveStopwatchState();
+            } else {
+                // Stop stopwatch
+                clearInterval(stopwatchInterval);
+                isRunning = false;
+
+                // Update UI
+                btn.textContent = '▶️ Start Session';
+                btn.className = 'start-btn';
+                display.classList.remove('active');
+                resetBtn.style.display = 'inline-block';
+
+                // Add time pair automatically
+                addTimePairFromStopwatch();
+
+                saveStopwatchState();
+            }
+        }
+
+        // Reset stopwatch
+        function resetStopwatch() {
+            stopwatchElapsed = 0;
+            stopwatchStartTime = null;
+            document.getElementById('elapsed-time').textContent = '00:00:00';
+            document.getElementById('clock-in-display').textContent = 'Clock In: --:-- --';
+            document.getElementById('target-display').textContent = `Target: ${parseFloat(document.getElementById('target-hours').value).toFixed(1)} hours`;
+            document.getElementById('reset-btn').style.display = 'none';
+
+            // Clear all manual time entries
+            const timePairsContainer = document.getElementById('time-pairs');
+            timePairsContainer.innerHTML = '';
+
+            // Clear total display
+            document.getElementById('total').innerHTML = '';
+
+            saveStopwatchState();
+            saveToLocalStorage();
+        }
+
+        // Add time pair from stopwatch data
+        function addTimePairFromStopwatch() {
+            if (!stopwatchStartTime) return;
+
+            const clockInTime = new Date(stopwatchStartTime);
+            const clockOutTime = new Date(stopwatchStartTime + (stopwatchElapsed * 1000));
+
+            // Extract time components
+            const inHour = clockInTime.getHours() % 12 || 12;
+            const inMin = clockInTime.getMinutes();
+            const inAmpm = clockInTime.getHours() >= 12 ? 'PM' : 'AM';
+
+            const outHour = clockOutTime.getHours() % 12 || 12;
+            const outMin = clockOutTime.getMinutes();
+            const outAmpm = clockOutTime.getHours() >= 12 ? 'PM' : 'AM';
+
+            // Add the pair
+            pairCounter++;
+            const container = document.getElementById('time-pairs');
+            const row = document.createElement('div');
+            row.className = 'time-row';
+            row.id = `pair-${pairCounter}`;
+            row.innerHTML = `
+                <div class="time-inputs-wrapper">
+                    <div class="time-input-group">
+                        <label>🕐 Clock In</label>
+                        <div class="time-controls">
+                            <input type="number" min="1" max="12" value="${inHour}" id="in-hour-${pairCounter}">
+                            <span class="colon">:</span>
+                            <input type="number" min="0" max="59" value="${String(inMin).padStart(2, '0')}" id="in-min-${pairCounter}">
+                            <select id="in-ampm-${pairCounter}">
+                                <option value="AM" ${inAmpm === 'AM' ? 'selected' : ''}>AM</option>
+                                <option value="PM" ${inAmpm === 'PM' ? 'selected' : ''}>PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="time-input-group">
+                        <label>🕐 Clock Out</label>
+                        <div class="time-controls">
+                            <input type="number" min="1" max="12" value="${outHour}" id="out-hour-${pairCounter}">
+                            <span class="colon">:</span>
+                            <input type="number" min="0" max="59" value="${String(outMin).padStart(2, '0')}" id="out-min-${pairCounter}">
+                            <select id="out-ampm-${pairCounter}">
+                                <option value="AM" ${outAmpm === 'AM' ? 'selected' : ''}>AM</option>
+                                <option value="PM" ${outAmpm === 'PM' ? 'selected' : ''}>PM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="remove-btn" onclick="removePair(${pairCounter})">✕ Remove</button>
+            `;
+            container.appendChild(row);
+            saveToLocalStorage();
+        }
+
+        // Save stopwatch state
+        function saveStopwatchState() {
+            localStorage.setItem('stopwatchState', JSON.stringify({
+                isRunning,
+                startTime: stopwatchStartTime,
+                elapsed: stopwatchElapsed
+            }));
+        }
+
+        // Load stopwatch state
+        function loadStopwatchState() {
+            const saved = localStorage.getItem('stopwatchState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    if (state.isRunning) {
+                        // Resume stopwatch
+                        stopwatchStartTime = state.startTime;
+                        stopwatchElapsed = Math.floor((Date.now() - stopwatchStartTime) / 1000);
+                        isRunning = true;
+
+                        const btn = document.getElementById('start-stop-btn');
+                        const display = document.getElementById('stopwatch-display');
+
+                        btn.textContent = '⏸️ Stop Session';
+                        btn.className = 'stop-btn';
+                        display.classList.add('active');
+
+                        const clockInTime = new Date(stopwatchStartTime);
+                        document.getElementById('clock-in-display').textContent = `Clock In: ${formatTime12Hour(clockInTime)}`;
+
+                        stopwatchInterval = setInterval(updateStopwatchDisplay, 100);
+                        updateStopwatchDisplay();
+                    } else if (state.elapsed > 0) {
+                        // Show stopped state with elapsed time
+                        stopwatchElapsed = state.elapsed;
+                        stopwatchStartTime = state.startTime;
+                        updateStopwatchDisplay();
+                        if (stopwatchStartTime) {
+                            const clockInTime = new Date(stopwatchStartTime);
+                            document.getElementById('clock-in-display').textContent = `Clock In: ${formatTime12Hour(clockInTime)}`;
+                        }
+                        document.getElementById('reset-btn').style.display = 'inline-block';
+                    }
+                } catch (e) {
+                    console.error('Failed to load stopwatch state', e);
+                }
+            }
+        }
+
+        // Update target display when target hours change
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('target-hours').addEventListener('input', function () {
+                updateStopwatchDisplay();
+            });
+        });
+
+        function addTimePair() {
+            pairCounter++;
+            const container = document.getElementById('time-pairs');
+            const row = document.createElement('div');
+            row.className = 'time-row';
+            row.id = `pair-${pairCounter}`;
+            row.innerHTML = `
+                <div class="time-inputs-wrapper">
+                    <div class="time-input-group">
+                        <label>🕐 Clock In</label>
+                        <div class="time-controls">
+                            <input type="number" min="1" max="12" value="8" id="in-hour-${pairCounter}">
+                            <span class="colon">:</span>
+                            <input type="number" min="0" max="59" value="44" id="in-min-${pairCounter}">
+                            <select id="in-ampm-${pairCounter}">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="time-input-group">
+                        <label>🕐 Clock Out</label>
+                        <div class="time-controls">
+                            <input type="number" min="1" max="12" value="10" id="out-hour-${pairCounter}">
+                            <span class="colon">:</span>
+                            <input type="number" min="0" max="59" value="07" id="out-min-${pairCounter}">
+                            <select id="out-ampm-${pairCounter}">
+                                <option value="AM">AM</option>
+                                <option value="PM">PM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button class="remove-btn" onclick="removePair(${pairCounter})">✕ Remove</button>
+            `;
+            container.appendChild(row);
+            saveToLocalStorage();
+        }
+
+        function removePair(id) {
+            const row = document.getElementById(`pair-${id}`);
+            if (row) {
+                row.remove();
+                saveToLocalStorage();
+            }
+        }
+
+        function calculateTotal() {
+            let totalSeconds = 0;
+            const pairs = document.querySelectorAll('.time-row');
+
+            pairs.forEach((row) => {
+                // Extract the actual pair ID from the row's ID attribute
+                const pairId = row.id.replace('pair-', '');
+
+                const inHourEl = document.getElementById(`in-hour-${pairId}`);
+                const inMinEl = document.getElementById(`in-min-${pairId}`);
+                const inAmpmEl = document.getElementById(`in-ampm-${pairId}`);
+                const outHourEl = document.getElementById(`out-hour-${pairId}`);
+                const outMinEl = document.getElementById(`out-min-${pairId}`);
+                const outAmpmEl = document.getElementById(`out-ampm-${pairId}`);
+
+                // Check if all elements exist before proceeding
+                if (!inHourEl || !inMinEl || !inAmpmEl || !outHourEl || !outMinEl || !outAmpmEl) {
+                    return;
+                }
+
+                const inHour = parseInt(inHourEl.value);
+                const inMin = parseInt(inMinEl.value);
+                const inAmpm = inAmpmEl.value;
+
+                const outHour = parseInt(outHourEl.value);
+                const outMin = parseInt(outMinEl.value);
+                const outAmpm = outAmpmEl.value;
+
+                // Convert to 24-hour for calculation
+                let inTime = new Date();
+                inTime.setHours(inAmpm === 'PM' && inHour !== 12 ? inHour + 12 : (inHour === 12 && inAmpm === 'AM' ? 0 : inHour));
+                inTime.setMinutes(inMin);
+                inTime.setSeconds(0);
+
+                let outTime = new Date();
+                outTime.setHours(outAmpm === 'PM' && outHour !== 12 ? outHour + 12 : (outHour === 12 && outAmpm === 'AM' ? 0 : outHour));
+                outTime.setMinutes(outMin);
+                outTime.setSeconds(0);
+
+                if (outTime < inTime) {
+                    outTime.setDate(outTime.getDate() + 1); // Assume next day if out < in
+                }
+
+                totalSeconds += (outTime - inTime) / 1000;
+            });
+
+            const totalHours = Math.floor(totalSeconds / 3600);
+            const totalMinutes = Math.floor((totalSeconds % 3600) / 60);
+            document.getElementById('total').innerHTML = `
+                <div style="font-size: 1.2rem; margin-bottom: 8px;">📊 Total Working Time</div>
+                <div style="font-size: 2rem;">${totalHours} hours ${totalMinutes} minutes</div>
+                <div style="font-size: 0.9rem; margin-top: 8px; opacity: 0.9;">(${(totalSeconds / 3600).toFixed(2)} hours)</div>
+            `;
+            saveToLocalStorage();
+        }
+
+        // Save current state to localStorage
+        function saveToLocalStorage() {
+            const pairs = [];
+            const rows = document.querySelectorAll('.time-row');
+
+            rows.forEach((row) => {
+                const pairId = row.id.replace('pair-', '');
+                const inHour = document.getElementById(`in-hour-${pairId}`)?.value;
+                const inMin = document.getElementById(`in-min-${pairId}`)?.value;
+                const inAmpm = document.getElementById(`in-ampm-${pairId}`)?.value;
+                const outHour = document.getElementById(`out-hour-${pairId}`)?.value;
+                const outMin = document.getElementById(`out-min-${pairId}`)?.value;
+                const outAmpm = document.getElementById(`out-ampm-${pairId}`)?.value;
+
+                if (inHour && inMin && inAmpm && outHour && outMin && outAmpm) {
+                    pairs.push({
+                        inH: parseInt(inHour),
+                        inM: parseInt(inMin),
+                        inA: inAmpm,
+                        outH: parseInt(outHour),
+                        outM: parseInt(outMin),
+                        outA: outAmpm
+                    });
+                }
+            });
+
+            localStorage.setItem('timePairs', JSON.stringify(pairs));
+            localStorage.setItem('pairCounter', pairCounter);
+        }
+
+        // Load state from localStorage
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('timePairs');
+            const savedCounter = localStorage.getItem('pairCounter');
+
+            if (savedCounter) {
+                pairCounter = parseInt(savedCounter);
+            }
+
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to parse saved data', e);
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Add event listeners to inputs for auto-save
+        function attachAutoSaveListeners() {
+            document.getElementById('time-pairs').addEventListener('change', saveToLocalStorage);
+            document.getElementById('time-pairs').addEventListener('input', saveToLocalStorage);
+        }
+
+        // Pre-populate with saved or default pairs
+        document.addEventListener('DOMContentLoaded', function () {
+            // Try to load from localStorage first
+            let pairsToLoad = loadFromLocalStorage();
+
+            // If no saved data, use default pairs
+            if (!pairsToLoad || pairsToLoad.length === 0) {
+                pairsToLoad = [
+                    { inH: 8, inM: 44, inA: 'AM', outH: 10, outM: 7, outA: 'AM' },
+                    { inH: 10, inM: 10, inA: 'AM', outH: 11, outM: 58, outA: 'AM' },
+                    { inH: 1, inM: 26, inA: 'PM', outH: 1, outM: 28, outA: 'PM' },
+                    { inH: 1, inM: 28, inA: 'PM', outH: 2, outM: 35, outA: 'PM' },
+                    { inH: 2, inM: 37, inA: 'PM', outH: 3, outM: 41, outA: 'PM' },
+                    { inH: 3, inM: 44, inA: 'PM', outH: 4, outM: 23, outA: 'PM' },
+                    { inH: 4, inM: 25, inA: 'PM', outH: 6, outM: 0, outA: 'PM' }
+                ];
+            }
+
+            pairsToLoad.forEach((pair, index) => {
+                pairCounter++;
+                const container = document.getElementById('time-pairs');
+                const row = document.createElement('div');
+                row.className = 'time-row';
+                row.id = `pair-${pairCounter}`;
+                row.innerHTML = `
+                    <div class="time-inputs-wrapper">
+                        <div class="time-input-group">
+                            <label>🕐 Clock In</label>
+                            <div class="time-controls">
+                                <input type="number" min="1" max="12" value="${pair.inH}" id="in-hour-${pairCounter}">
+                                <span class="colon">:</span>
+                                <input type="number" min="0" max="59" value="${pair.inM.toString().padStart(2, '0')}" id="in-min-${pairCounter}">
+                                <select id="in-ampm-${pairCounter}">
+                                    <option value="${pair.inA}" selected>${pair.inA}</option>
+                                    <option value="${pair.inA === 'AM' ? 'PM' : 'AM'}">${pair.inA === 'AM' ? 'PM' : 'AM'}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="time-input-group">
+                            <label>🕐 Clock Out</label>
+                            <div class="time-controls">
+                                <input type="number" min="1" max="12" value="${pair.outH}" id="out-hour-${pairCounter}">
+                                <span class="colon">:</span>
+                                <input type="number" min="0" max="59" value="${pair.outM.toString().padStart(2, '0')}" id="out-min-${pairCounter}">
+                                <select id="out-ampm-${pairCounter}">
+                                    <option value="${pair.outA}" selected>${pair.outA}</option>
+                                    <option value="${pair.outA === 'AM' ? 'PM' : 'AM'}">${pair.outA === 'AM' ? 'PM' : 'AM'}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="remove-btn" onclick="removePair(${pairCounter})">✕ Remove</button>
+                `;
+                container.appendChild(row);
+            });
+
+            // Attach auto-save listeners after loading data
+            attachAutoSaveListeners();
+        });
+
+        document.getElementById('add-pair').addEventListener('click', addTimePair);
+        document.getElementById('calculate').addEventListener('click', calculateTotal);
+        document.getElementById('start-stop-btn').addEventListener('click', toggleStopwatch);
+        document.getElementById('reset-btn').addEventListener('click', resetStopwatch);
+
+        // Load stopwatch state on page load
+        window.addEventListener('DOMContentLoaded', function () {
+            loadStopwatchState();
+        });
+    </script>
+</body>
+
+</html>

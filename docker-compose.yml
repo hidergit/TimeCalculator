@@ -1,9 +1,0 @@
-version: '3.8'
-
-services:
-  timer:
-    build: .
-    container_name: timer
-    ports:
-      - "8081:80"
-    restart: unless-stopped
